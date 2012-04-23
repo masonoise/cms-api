@@ -1,0 +1,2 @@
+Run bundle install and bundle exec rackup to see it and bundle exec rspec spec to run the tests.
+
