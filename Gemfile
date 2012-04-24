@@ -6,7 +6,6 @@ gem "json", "1.6.5"
 gem "mongo_mapper", "0.11.1"
 gem "bson_ext"
 gem "sinatra"
-gem "aws-sdk"
 
 group :development do
   gem "guard"
