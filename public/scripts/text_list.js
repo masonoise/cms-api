@@ -19,19 +19,7 @@ $(document).ready(function() {
       }
     });
   }
-
-  var delete_item = function(content_id) {
-      alert('Deleting: ' + content_id);
-      $.ajax({
-        type: "POST",
-        url: "/api/v1/cms/text/" + content_id,
-        data: { delete: 1 },
-        success: function(data) {
-          $('#results').text(data.result);
-          text_list();
-        }
-      });
-  }
+  text_list_function = text_list;
 
   var post_content = function() {
       $.ajax({

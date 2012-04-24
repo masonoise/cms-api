@@ -23,10 +23,13 @@ module RpxCms
 
       desc "Updates content."
       post '/text/:id' do
-        if (params[:delete] == 1)
+        if (params[:delete] == "true")
+          puts "Deleting item id=#{params[:id]}"
           tc = TextContent.find_by_id(params[:id])
           tc.destroy
           { :result => "Deleted." }
+        else
+          puts "Update called but not deleting?"
         end
       end
 
