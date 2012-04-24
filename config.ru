@@ -1,7 +1,12 @@
 require File.expand_path('../config/environment', __FILE__)
 
-run RpxCms::App.new
+map "/" do
+  #use CmsMod::CmsApp
+  #run Sinatra::Base
+  use Rack::Static, :urls => ["/stylesheets", "/images", "/scripts"], :root => "public"
+  run CmsMod::CmsApp.new
+end
 
-#require './main.rb'     
-#run Sinatra::Application
-
+map "/api" do
+  run RpxCms::App.new
+end
