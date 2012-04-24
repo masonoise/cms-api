@@ -9,8 +9,8 @@ describe Acme::API do
     
   context "v1" do
     context "cms" do
-      it "ping" do
-        get "/api/v1/system/ping"
+      it "text" do
+        get "/api/v1/cms/text/"
         last_response.body.should == { :ping => "pong" }.to_json
       end
     end

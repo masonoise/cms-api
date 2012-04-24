@@ -1,7 +1,7 @@
-module RpxCms
+module CmsApi
   class App
     def call(env)
-      RpxCms::API.call(env)
+      CmsApi::API.call(env)
     end
   end
 end

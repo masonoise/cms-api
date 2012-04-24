@@ -1,10 +1,10 @@
-module RpxCms
+module CmsApi
   class API_v1 < Grape::API
     MongoMapper.connection = Mongo::Connection.new('127.0.0.1', 27017, :pool_size => 5, :pool_timeout => 5)
     MongoMapper.database = 'cms'
     #MongoMapper.database.authenticate('{user-name}','{user-password}')
 
-    version 'v1', :using => :path, :vendor => 'rpx', :format => :json
+    version 'v1', :using => :path, :vendor => 'cms_api', :format => :json
 
     resource :cms do
       desc "Gets content."

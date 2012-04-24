@@ -1,6 +1,6 @@
-module RpxCms
+module CmsApi
   class API < Grape::API
-    mount ::RpxCms::API_v1
+    mount ::CmsApi::API_v1
   end
 end
 

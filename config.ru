@@ -8,5 +8,5 @@ map "/" do
 end
 
 map "/api" do
-  run RpxCms::App.new
+  run CmsApi::App.new
 end

@@ -10,5 +10,5 @@ Dir[File.expand_path('../../app/models/*.rb', __FILE__)].each do |f|
 end
 
 require File.expand_path('../../api/api.rb', __FILE__)
-require File.expand_path('../../app/rpx_cms_app.rb', __FILE__)
+require File.expand_path('../../app/cms_api_app.rb', __FILE__)
 require File.expand_path('../../app/cms_mod.rb', __FILE__)
