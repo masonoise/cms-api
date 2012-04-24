@@ -28,9 +28,21 @@
 <div style="color:red;" id="results"></div>
 <br/>
 
-<h2>Current published content items:</h2>
+<h2>Current content items:</h2>
 
-<div id="text_list">Loading list...</div>
+  <ul id="tab" class="nav nav-tabs">
+    <li class="active"><a href="#text_list_published" data-toggle="pill">Published</a></li>
+    <li><a href="#text_list_draft" data-toggle="pill">Draft</a></li>
+  </ul>
+
+  <div id="my-tab-content" class="tab-content">
+    <div class="tab-pane fade in active" id="text_list_published">
+      <div id="text_list_published_content">Loading list...</div>
+    </div>
+    <div class="tab-pane fade" id="text_list_draft">
+      <div id="text_list_draft_content">Loading list...</div>
+    </div>
+   </div>
 <br/>
 
 <h2>Add new item:</h2>
@@ -56,6 +68,8 @@
     // This sucks. It is just so we can call a JQuery function, which is defined in text_list.js
     // In there it declares the function, then assigns it to this global variable. Sorry about that.
     text_list_function = null;
+
+    $('#text_list_published').tab('show');
 
     var delete_item = function (content_id) {
         $.ajax({

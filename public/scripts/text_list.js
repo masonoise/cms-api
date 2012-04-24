@@ -15,7 +15,7 @@ $(document).ready(function() {
                 "</td><td>" + item.block +
                 "</td><td><i class='icon-trash' onclick='delete_item(\"" + item.id + "\")'></i></td></tr>";
         }
-        $('#text_list').html("<table class='table table-striped' width='50%' border='0'><tr><th>Title</th><th>Content</th><th>Page</th><th>Block</th><th>&nbsp;</th></tr>" + the_list + "</table>");
+        $('#text_list_published_content').html("<table class='table table-striped' width='50%' border='0'><tr><th>Title</th><th>Content</th><th>Page</th><th>Block</th><th>&nbsp;</th></tr>" + the_list + "</table>");
       }
     });
   }
