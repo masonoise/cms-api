@@ -21,8 +21,12 @@ $(document).ready(function() {
         }
         if (ver == 'draft') {
             $('#content_list').html("<table class='table table-striped' width='50%' border='0'><tr><th>Title</th><th>Content</th><th>Page</th><th>Block</th><th>Type</th><th>Make Live</th><th>Delete</th></tr>" + the_list + "</table>");
+            $('#live_btn').removeClass('disabled');
+            $('#draft_btn').addClass('disabled');
         } else {
             $('#content_list').html("<table class='table table-striped' width='50%' border='0'><tr><th>Title</th><th>Content</th><th>Page</th><th>Block</th><th>Type</th><th>Delete</th></tr>" + the_list + "</table>");
+            $('#draft_btn').removeClass('disabled');
+            $('#live_btn').addClass('disabled');
         }
       }
     });
@@ -40,7 +44,8 @@ $(document).ready(function() {
         },
         success: function(data) {
           $('#results').text(data.result);
-          show_list('draft');
+          window.location('/draft');
+//          show_list('draft');
         },
         fail: function(data) {
             $('#results').text(data);

@@ -1,0 +1,35 @@
+<div class="row" xmlns="http://www.w3.org/1999/html">
+  <div class="span12">
+    <a href="/live"><i class="icon-list-alt"/></i> Back to List</a>
+    <h1>CMS: Content View</h1>
+
+    <br/><br/>
+  </div>
+</div>
+
+<div class="row">
+<div class="span6">
+  <div class="row">
+    <form action="/update" method="post">
+      <input type="hidden" name="page" value="<%= @item['page'] %>"/>
+      <input type="hidden" name="block" value="<%= @item['block'] %>"/>
+      <input type="hidden" name="ver" value="<%= @item['version'] %>"/>
+    <table class='table span6'>
+      <tr><th>Title</th><td><input type="text" name="title" class="span3" value="<%= @item['title'] %>"/></td></tr>
+      <tr><th>Content</th><td><input type="text" name="content" class="span3" value="<%= @item['content'] %>"/></td></tr>
+      <tr><th>Page</th><td><%= @item['page'] %></td></tr>
+      <tr><th>Block</th><td><%= @item['block'] %></td></tr>
+      <tr><th>Type</th><td><%= @item['type'] %></td></tr>
+      <tr><th>Version</th><td><%= @item['version'] %></td></tr>
+      <tr><td colspan="2">
+        <input type="submit" value="Save" name="submit" class='btn btn-primary'/>
+        <% if @item['version'] == CmsContent::DRAFT_STATE %>
+            <input type="submit" value="Make Live" name="submit" class='btn btn-primary'/>
+        <% end %>
+        <input type="submit" value="Delete" name="submit" class='btn btn-primary'/>
+      </td></tr>
+    </table>
+    </form>
+  </div>
+</div>
+</div>

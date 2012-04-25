@@ -11,14 +11,16 @@ module CmsApi
 
     resource :cms do
       desc "Gets content."
-      get '/:page/:block/:v' do
+      get '/get/:page/:block/:v' do
         version = params[:v] || CmsContent::LIVE_STATE
-        item = CmsContent.first(:page => "/#{params[:page]}", :block => params[:block], :version => version)
+        puts "Looking for: page=#{CGI::unescape(params[:page])}, block = #{params[:block]}, version = #{version}"
+        item = CmsContent.first(:page => "#{CGI::unescape(params[:page])}", :block => params[:block], :version => version)
         if (item == "null")
-          {:result => "Not found"}
+          result = {:result => "Not found"}
         else
-          {:result => item.to_json}
+          result = {:result => item.to_json}
         end
+        result
       end
 
       desc "Lists content."
@@ -27,7 +29,7 @@ module CmsApi
         { :result => CmsContent.all(:version => version) }
       end
 
-      desc "Updates content."
+      desc "Updates content and puts current content into Retired state."
       post '/:page/:block/:v' do
         version = params[:v] || CmsContent::LIVE_STATE
         if (params[:action] == ACTION_DELETE)
@@ -45,23 +47,24 @@ module CmsApi
         end
       end
 
-      desc "Adds content."
-      post '/' do
+      desc "Adds content into Draft state."
+      post '/new' do
         # TODO: check if item with /page/block already exists!
+        # Required: content, title, page, block, ctype
         error!("missing :content", 400) unless (params[:content] && params[:content].length > 0)
-        error!("missing :content", 400) if (params[:content] == "undefined")
-        error!("missing :title", 400) if (params[:title] == "undefined")
+        error!("missing :title", 400) unless (params[:title] && params[:title].length > 0)
         error!("missing :page", 400) unless (params[:page] && params[:content].length > 0)
         error!("missing :block", 400) unless (params[:block] && params[:content].length > 0)
-        title = params[:title] || "Untitled"
-        tc = CmsContent.create(:title => title,
+        error!("missing :ctype", 400) unless (params[:ctype] && params[:ctype].length > 0)
+        author = params[:author] || "Unknown"
+        item = CmsContent.create(:title => params[:title],
             :content => params[:content],
             :page => params[:page],
             :block => params[:block],
-            :type => "text",
+            :type => params[:ctype],
             :version => CmsContent::DRAFT_STATE,
-            :author => "Mason")
-        { :result => "Saved as draft." }
+            :author => author)
+        { :status => "Saved as draft." }
       end
 
     end

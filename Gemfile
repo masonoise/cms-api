@@ -4,8 +4,11 @@ gem "rack", "1.3.5"
 gem "grape", :git => "http://github.com/intridea/grape.git", :branch => "frontier"
 gem "json", "1.6.5"
 gem "mongo_mapper", "0.11.1"
-gem "bson_ext"
-gem "sinatra"
+gem "bson_ext", "1.6.2"
+gem "sinatra", "1.3.1"
+gem "httparty", "0.8.3"
+gem "carrierwave"
+gem "fog", "~> 1.3.1"
 
 group :development do
   gem "guard"
