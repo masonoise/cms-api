@@ -4,3 +4,4 @@
 .irbrc
 .bundle
 .idea/*
+config/aws_credentials.rb
