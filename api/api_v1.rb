@@ -25,6 +25,7 @@ module CmsApi
 
       desc "Lists content."
       get '/all/:v' do
+        puts "In all/#{params[:v]}"
         version = params[:v] || CmsContent::LIVE_STATE
         { :result => CmsContent.all(:version => version) }
       end

@@ -79,13 +79,13 @@
   <div class="span6">
     <h3>Add new file:</h3>
 
-    <form class="well" action="/new/file" method="post">
+    <form class="well" enctype="multipart/form-data" action="/new/file" method="post">
       <label>URL</label>
-      <input type="text" name="url" class="span4" placeholder="Enter URL for file (no spaces)"/>
+      <input type="text" name="page" class="span4" placeholder="Enter URL for file (no spaces)"/>
       <label>Select a File</label>
       <input type="file" name="the_file" />
       <label>Description</label>
-      <input type="text" name="description" id="description" class="span3"/>
+      <input type="text" name="content" id="description" class="span3"/>
       <br/>
       <button type="submit" class="btn"/>Upload</button>
     </form>

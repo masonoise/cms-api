@@ -17,3 +17,16 @@ get Grape going from [Dblock.org](http://code.dblock.org/grape-api-mounted-on-ra
 
 NOTE: This is all totally new and not usable yet so don't even try. Stay tuned.
 Tests are broken right now, will be fixed shortly.
+
+To use, you will need to:
+
+1. bundle install
+2. Create config/aws_credentials.rb with your access key and secret. This is not checked into git for obvious reasons (.gitignore specifically includes it).
+ The file should look like this:
+    module AwsCredentials
+      ACCESS_KEY_ID = 'YOUR_ACCESS_KEY_ID'
+      SECRET_ACCESS_KEY = 'YOUR_SECRET_ACCESS_KEY'
+    end
+
+- bundle exec rackup - will start the app
+- bundle exec rspec spec - will run the tests, once there are some
