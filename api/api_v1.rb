@@ -39,16 +39,19 @@ module CmsApi
         { :result => CmsContent.all(:version => version) }
       end
 
-      desc "Updates content and puts current content into Retired state."
-      post '/:page/:block/:v' do
+      desc "Updates content item."
+      post '/:ctype/:page/:block/:v' do
+        puts "Updating content #{params[:page]}/#{params[:block]}/#{params[:v]} with action=#{params[:action]}" if DEBUG
+        # TODO: Make work for both text and file content items
         version = params[:v] || CmsContent::LIVE_STATE
         if (params[:action] == ACTION_DELETE)
-          item = CmsContent.first(:page => "/#{params[:page]}", :block => params[:block], :version => version)
+          puts "--> Deleting" if DEBUG
+          item = CmsContent.first(:page => "#{params[:page]}", :block => params[:block], :version => version)
           item.destroy
           { :result => "Deleted." }
         elsif (params[:action] == ACTION_MAKE_LIVE)
-          puts "Make live called for: /#{params[:page]}/#{params[:block]}/#{version}"
-          item = CmsContent.first(:page => "/#{params[:page]}", :block => params[:block], :version => version)
+          puts "--> Making live" if DEBUG
+          item = CmsContent.first(:page => "#{params[:page]}", :block => params[:block], :version => version)
           item.version = CmsContent::LIVE_STATE
           item.save
           { :result => "Promoted to live." }

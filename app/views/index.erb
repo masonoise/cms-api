@@ -2,7 +2,9 @@
   <div class="span12">
     <h1>Welcome to the CMS</h1>
 
-    <div style="color:red;" id="results"></div>
+    <div style="color:red;" id="results">
+      <%= @status %>
+    </div>
     <br/><br/>
   </div>
 </div>
@@ -31,14 +33,14 @@
         <th>Block</th>
         <th>Type</th>
         <% if @version == CmsContent::DRAFT_STATE %>
-            <th>Make Live</th>
+            <th>&nbsp;</th>
         <% end %>
-        <th>Delete</th>
+        <th>&nbsp;</th>
       </tr>
       <% @content_list.each do |item| %>
           <tr>
             <td>
-              <a href="/show/<%= CGI::escape(item['page']) %>/<%= item['block'] %>/<%= @version %>"><i class="icon-pencil"/></i>
+              <a class="btn btn-mini btn-inverse" href="/show/text/<%= CGI::escape(item['page']) %>/<%= item['block'] %>/<%= @version %>"><i class="icon-pencil icon-white"/></i>
               </a></td>
             <td><%= item['title'] %></td>
             <td><%= item['content'] %></td>
@@ -47,11 +49,17 @@
             <td><%= item['type'] %></td>
             <% if @version == CmsContent::DRAFT_STATE %>
                 <td>
-                  <i class='icon-ok' onclick='make_item_live(\"<%= item['page'] %>/<%= item['block'] %>/<%= item['version'] %>\")'></i>
+                  <form action="/update/<%= item['type'] %>/<%= CGI::escape(item['page']) %>/<%= item['block'] %>/<%= item['version'] %>" method="post">
+                    <input type="hidden" name="action" value="make_live">
+                    <button type="submit" class="btn-small btn-success"><i class="icon-ok icon-white"></i> Make Live</button>
+                  </form>
                 </td>
             <% end %>
             <td>
-              <i class='icon-trash' onclick='delete_item(\"<%= item['page'] %>/<%= item['block'] %>/<%= item['version'] %>\")'></i>
+              <form action="/update/<%= item['type'] %>/<%= CGI::escape(item['page']) %>/<%= item['block'] %>/<%= item['version'] %>" method="post">
+                <input type="hidden" name="action" value="delete">
+                <button type="submit" class="btn-small btn-danger"><i class="icon-trash icon-white"></i> Delete</button>
+              </form>
             </td>
           </tr>
       <% end %>

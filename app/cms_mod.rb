@@ -58,10 +58,15 @@ module CmsMod
       erb :show
     end
 
-    post '/update' do
-      puts "Update! For: #{params[:page]}/#{params[:block]}, action=#{params[:submit]}"
-      puts "Params: #{params.inspect}"
-      erb :show
+    post '/update/:ctype/:page/:block/:ver' do
+      action = "#{params[:ctype]}/#{CGI::escape(params[:page])}/#{params[:block]}/#{params[:ver]}"
+      puts "Update! For: #{action}, action=#{params[:action]}"
+      response = HTTParty.post("#{request.scheme}://#{request.host}:#{request.port}/api/v1/cms/#{action}",
+          :body => {
+              :action => params[:action]
+          })
+      @status = response.parsed_response #['result']
+      redirect to('/live')
     end
   end
 end
