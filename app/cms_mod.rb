@@ -59,11 +59,13 @@ module CmsMod
     end
 
     post '/update/:ctype/:page/:block/:ver' do
-      action = "#{params[:ctype]}/#{CGI::escape(params[:page])}/#{params[:block]}/#{params[:ver]}"
-      puts "Update! For: #{action}, action=#{params[:action]}"
-      response = HTTParty.post("#{request.scheme}://#{request.host}:#{request.port}/api/v1/cms/#{action}",
+      action_item = "#{params[:ctype]}/#{CGI::escape(params[:page])}/#{params[:block]}/#{params[:ver]}"
+      action = params[:action].downcase
+      action = "make_live" if action == "make live" # Because of stupid form button
+      puts "Update! For: #{action_item}, action=#{action}"
+      response = HTTParty.post("#{request.scheme}://#{request.host}:#{request.port}/api/v1/cms/#{action_item}",
           :body => {
-              :action => params[:action]
+              :action => action
           })
       @status = response.parsed_response #['result']
       redirect to('/live')

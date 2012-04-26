@@ -10,7 +10,7 @@
 <div class="row">
 <div class="span6">
   <div class="row">
-    <form action="/update" method="post">
+    <form action="/update/<%= @item['type'] %>/<%= CGI::escape(@item['page']) %>/<%= @item['block'] %>/<%= @item['version'] %>" method="post">
       <input type="hidden" name="page" value="<%= @item['page'] %>"/>
       <input type="hidden" name="block" value="<%= @item['block'] %>"/>
       <input type="hidden" name="ver" value="<%= @item['version'] %>"/>
@@ -22,11 +22,11 @@
       <tr><th>Type</th><td><%= @item['type'] %></td></tr>
       <tr><th>Version</th><td><%= @item['version'] %></td></tr>
       <tr><td colspan="2">
-        <input type="submit" value="Save" name="submit" class='btn btn-primary'/>
+        <input type="submit" value="Save" name="action" class='btn btn-primary'/>
         <% if @item['version'] == CmsContent::DRAFT_STATE %>
-            <input type="submit" value="Make Live" name="submit" class='btn btn-primary'/>
+            <input type="submit" value="Make Live" name="action" class='btn btn-success'/>
         <% end %>
-        <input type="submit" value="Delete" name="submit" class='btn btn-primary'/>
+        <input type="submit" value="Delete" name="action" class='btn btn-danger'/>
       </td></tr>
     </table>
     </form>
