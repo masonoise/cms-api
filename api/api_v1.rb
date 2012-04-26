@@ -1,7 +1,14 @@
+#
+# This module implements the end points of the CMS API.
+#
 module CmsApi
+  # API Version 1
   class API_v1 < Grape::API
     ACTION_DELETE = 'delete'
     ACTION_MAKE_LIVE = 'make_live'
+
+    # Set to true for debugging output
+    DEBUG = true
 
     MongoMapper.connection = Mongo::Connection.new('127.0.0.1', 27017, :pool_size => 5, :pool_timeout => 5)
     MongoMapper.database = 'cms'
@@ -10,22 +17,24 @@ module CmsApi
     version 'v1', :using => :path, :vendor => 'cms_api', :format => :json
 
     resource :cms do
-      desc "Gets content."
-      get '/get/:page/:block/:v' do
+      desc "Gets a set of text content."
+      get '/text/:page/:block/:v' do
         version = params[:v] || CmsContent::LIVE_STATE
-        puts "Looking for: page=#{CGI::unescape(params[:page])}, block = #{params[:block]}, version = #{version}"
-        item = CmsContent.first(:page => "#{CGI::unescape(params[:page])}", :block => params[:block], :version => version)
-        if (item == "null")
-          result = {:result => "Not found"}
+        puts "Fetching: page=#{CGI::unescape(params[:page])}, block = #{params[:block]}, version = #{version}" if DEBUG
+        conditions = { :page => "#{CGI::unescape(params[:page])}", :block => params[:block] }
+        conditions[:version] = version unless version == CmsContent::ANY_STATE
+        items = CmsContent.all(conditions)
+        if (items == "null")
+          result = []
         else
-          result = {:result => item.to_json}
+          result = {:result => items.to_json}
         end
         result
       end
 
-      desc "Lists content."
-      get '/all/:v' do
-        puts "In all/#{params[:v]}"
+      desc "Returns all text content of a given version."
+      get '/text/all/:v' do
+        puts "Fetching all text of version #{params[:v]}" if DEBUG
         version = params[:v] || CmsContent::LIVE_STATE
         { :result => CmsContent.all(:version => version) }
       end

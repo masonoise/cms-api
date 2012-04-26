@@ -12,4 +12,5 @@ class CmsContent
   LIVE_STATE = "live"
   DRAFT_STATE = "draft"
   RETIRED_STATE = "retired"
+  ANY_STATE = "any"
 end
