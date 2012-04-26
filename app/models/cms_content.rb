@@ -7,7 +7,9 @@ class CmsContent
   key :block, String
   key :type, String
   key :version, String
-  key :author, Integer
+  key :last_updated_by, String
+  key :last_update, Integer
+  key :created_at, Integer
 
   LIVE_STATE = "live"
   DRAFT_STATE = "draft"

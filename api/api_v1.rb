@@ -6,6 +6,7 @@ module CmsApi
   class API_v1 < Grape::API
     ACTION_DELETE = 'delete'
     ACTION_MAKE_LIVE = 'make_live'
+    ACTION_SAVE = 'save'
 
     # Set to true for debugging output
     DEBUG = true
@@ -53,8 +54,19 @@ module CmsApi
           puts "--> Making live" if DEBUG
           item = CmsContent.first(:page => "#{params[:page]}", :block => params[:block], :version => version)
           item.version = CmsContent::LIVE_STATE
+          item.last_update = Time.new.to_i
           item.save
           { :result => "Promoted to live." }
+        elsif (params[:action] == ACTION_SAVE)
+          puts "--> Saving changes" if DEBUG
+          item = CmsContent.first(:page => "#{params[:page]}", :block => params[:block], :version => version)
+          author = params[:author] || "Unknown"
+          item.title = params[:title]
+          item.content = params[:content]
+          item.last_update = Time.new.to_i
+          item.last_updated_by = author
+          item.save
+          { :result => "Changes saved." }
         else
           puts "Update called for unknown action: #{params[:action]}"
         end
@@ -76,7 +88,8 @@ module CmsApi
             :block => params[:block],
             :type => params[:ctype],
             :version => CmsContent::DRAFT_STATE,
-            :author => author)
+            :created_at => Time.new.to_i,
+            :last_updated_by => author)
         { :status => "Saved as draft." }
       end
 

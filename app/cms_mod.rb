@@ -63,12 +63,25 @@ module CmsMod
       action = params[:action].downcase
       action = "make_live" if action == "make live" # Because of stupid form button
       puts "Update! For: #{action_item}, action=#{action}"
-      response = HTTParty.post("#{request.scheme}://#{request.host}:#{request.port}/api/v1/cms/#{action_item}",
-          :body => {
-              :action => action
-          })
-      @status = response.parsed_response #['result']
-      redirect to('/live')
+      if (action == "save")
+        response = HTTParty.post("#{request.scheme}://#{request.host}:#{request.port}/api/v1/cms/#{action_item}",
+            :body => {
+                :title => params[:title],
+                :content => params[:content],
+                :action => action
+            })
+        status = response.parsed_response['result']
+        #result = HTTParty.get("#{request.scheme}://#{request.host}:#{request.port}/api/v1/cms/#{params[:ctype]}/#{CGI::escape(params[:page])}/#{params[:block]}/#{params[:ver]}").parsed_response['result']
+        #item = JSON.parse(result)[0] rescue @item = Hash.new
+        redirect to("/show/text/#{CGI::escape(params[:page])}/#{params[:block]}/#{params[:ver]}?status=#{CGI::escape(status)}")
+      else
+        response = HTTParty.post("#{request.scheme}://#{request.host}:#{request.port}/api/v1/cms/#{action_item}",
+            :body => {
+                :action => action
+            })
+        @status = response.parsed_response #['result']
+        redirect to('/live')
+      end
     end
   end
 end
