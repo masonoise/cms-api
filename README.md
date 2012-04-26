@@ -30,3 +30,10 @@ To use, you will need to:
 
 - bundle exec rackup - will start the app
 - bundle exec rspec spec - will run the tests, once there are some
+
+VERY LONG TO DO LIST:
+
+- Allow editing and saving of content changes in draft mode
+- Allow editing and saving of content changes in live mode, which will create a new version in draft mode
+- When draft item made live and there's already a live one, put existing live one into Retired state
+
