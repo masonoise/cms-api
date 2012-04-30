@@ -8,6 +8,7 @@ gem "bson_ext", "1.6.2"
 gem "sinatra", "1.3.1"
 gem "httparty", "0.8.3"
 gem "aws-sdk"
+gem "sinatra-content-for2"
 
 group :development do
   gem "guard"

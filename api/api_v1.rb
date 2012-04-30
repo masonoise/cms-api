@@ -83,6 +83,7 @@ module CmsApi
             :type => params[:ctype],
             :version => CmsContent::DRAFT_STATE,
             :created_at => Time.new.to_i,
+            :last_updated => Time.new.to_i,
             :last_updated_by => author)
         { :status => "Saved as draft." }
       end

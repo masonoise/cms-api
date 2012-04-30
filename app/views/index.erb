@@ -1,6 +1,8 @@
+<% @add_on_js = "bkLib.onDomLoaded(nicEditors.allTextAreas);" %>
+
 <div class="row">
   <div class="span12">
-    <h1>Welcome to the CMS</h1>
+    <h1>DisContent Management System</h1>
 
     <div style="color:red;" id="status">
       <%= params[:status] %>
@@ -75,7 +77,7 @@
       <label>Title</label>
       <input type="text" name="title" id="title" class="span4" placeholder="Enter content title"/>
       <label>Content</label>
-      <textarea rows="3" cols="30" name="content" id="content" class="span5"/></textarea>
+      <textarea rows="10" cols="30" name="content" id="content" class="span5"/></textarea>
       <label>Page</label>
       <input type="text" name="page" id="page" class="span2"/>
       <label>Block</label>

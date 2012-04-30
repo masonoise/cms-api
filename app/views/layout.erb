@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Welcome to the CMS</title>
+  <title>DisContent Management System</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="">
   <meta name="author" content="">
 
   <!-- Le styles -->
-  <link href="/stylesheets/bootstrap.css" rel="stylesheet">
+  <link rel="stylesheet" href="/stylesheets/bootstrap.css">
   <style>
     body {
       padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
     }
   </style>
-  <link href="/stylesheets/bootstrap-responsive.css" rel="stylesheet">
+  <link rel="stylesheet" href="/stylesheets/bootstrap-responsive.css">
 </head>
 <body>
 
@@ -25,8 +25,12 @@
 
 <script src="/scripts/jquery-1.7.1.min.js"></script>
 <script src="/scripts/bootstrap-tab.js"></script>
+<script src="/scripts/bootstrap.min.js"></script>
+<script src="http://js.nicedit.com/nicEdit.js"></script>
+
 <script language="javascript">
     $("#status").fadeOut(5000);
+    <%= @add_on_js %>
 </script>
 </body>
 </html>

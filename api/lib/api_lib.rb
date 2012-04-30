@@ -53,6 +53,7 @@ module ApiLib
             :type => item.type,
             :version => CmsContent::DRAFT_STATE,
             :created_at => Time.new.to_i,
+            :last_updated => Time.new.to_i,
             :last_updated_by => author)
         message = "Changes saved to new draft version."
       end

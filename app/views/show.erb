@@ -1,8 +1,10 @@
+<% @add_on_js = "bkLib.onDomLoaded(nicEditors.allTextAreas);" %>
+
 <div class="row" xmlns="http://www.w3.org/1999/html">
   <div class="span12">
     <a href="/live"><i class="icon-list-alt"/></i> Back to List</a>
 
-    <h1>CMS: Content View</h1>
+    <h1>DisContent: Item View</h1>
 
     <div style="color:red;" id="status">
       <%= params[:status] %>
@@ -12,22 +14,26 @@
 </div>
 
 <div class="row">
-  <div class="span6">
+  <div class="span8">
     <div class="row">
       <form action="/update/<%= @item['type'] %>/<%= CGI::escape(@item['page']) %>/<%= @item['block'] %>/<%= @item['version'] %>" method="post">
         <input type="hidden" name="page" value="<%= @item['page'] %>"/>
         <input type="hidden" name="block" value="<%= @item['block'] %>"/>
         <input type="hidden" name="ver" value="<%= @item['version'] %>"/>
 
-        <h3>Item is in <%= @item['version'] %> state.</h3>
-        <table class='table span6'>
+        <table class='table span8'>
+          <tr><td colspan="2">
+            <h3>Item for <%= @item['page'] %>, block <%=  @item['block'] %>, in <%= @item['version'] %> state.</h3>
+          </td></tr>
           <tr>
             <th>Title</th>
             <td><input type="text" name="title" class="span3" value="<%= @item['title'] %>"/></td>
           </tr>
           <tr>
             <th>Content</th>
-            <td><input type="text" name="content" class="span3" value="<%= @item['content'] %>"/></td>
+            <td>
+              <textarea class="span8" name="content" id="item-content" rows="20" cols="80" placeholder="Enter content here."><%= @item['content'] %></textarea>
+            </td>
           </tr>
           <tr>
             <th>Page</th>
@@ -46,6 +52,10 @@
             <td><%= @item['version'] %></td>
           </tr>
           <tr>
+            <th>Last Updated</th>
+            <td>By <%= @item['author'] || "Unknown" %> at <%= Time.at(@item['last_updated']).strftime("%m/%d/%Y %I:%M:%S") rescue "Unknown" %></td>
+          </tr>
+          <tr>
             <td colspan="2">
               <input type="submit" value="Save" name="action" class='btn btn-primary'/>
               <% if @item['version'] == CmsContent::DRAFT_STATE %>
@@ -61,13 +71,14 @@
     <% if (@items.length > 0) %>
         <div class="row">
           <h3>Other versions of this item:</h3>
-          <table class='table span6'>
+          <table class='table span8'>
             <tr>
               <th>Edit</th>
               <th>Title</th>
               <th>Content</th>
               <th>Version</th>
               <th>Last Updated</th>
+              <th>&nbsp;</th>
               <th>&nbsp;</th>
             </tr>
             <% @items.each do |i| %>
@@ -77,9 +88,18 @@
                   <td><%= i['title'] %></td>
                   <td><%= i['content'] %></td>
                   <td><%= i['version'] %></td>
-                  <td><%= i['last_updated'] %></td>
+                  <td>By <%= @item['author'] || "Unknown" %> at <%= Time.at(i['last_updated']).strftime("%m/%d/%Y %I:%M:%S") rescue "Unknown" %></td>
                   <td>
-                    <button class="btn btn-danger">Delete</button>
+                    <form action="/update/<%= i['type'] %>/<%= CGI::escape(i['page']) %>/<%= i['block'] %>/<%= i['version'] %>" method="post">
+                      <input type="hidden" name="action" value="delete">
+                      <button type="submit" class="btn-small btn-danger"><i class="icon-trash icon-white"></i> Delete</button>
+                    </form>
+                  </td>
+                  <td>
+                    <% if (i['version'] == CmsContent::RETIRED_STATE) %>
+                    <button class="btn btn-primary btn-small"><i class="icon-backward icon-white"></i> Revert</button>
+                    <% else %>&nbsp;
+                    <% end %>
                   </td>
                 </tr>
             <% end %>
@@ -88,3 +108,4 @@
     <% end %>
   </div> <!-- end span6 -->
 </div> <!-- end row -->
+

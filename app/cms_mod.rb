@@ -1,8 +1,11 @@
 require 'sinatra'
 require 'cgi'
+require 'sinatra/content_for2'
 
 module CmsMod
   class CmsApp < Sinatra::Base
+    helpers Sinatra::ContentFor2
+
     get '/*favicon.ico' do
       halt
     end
