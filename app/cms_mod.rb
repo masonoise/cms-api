@@ -48,13 +48,18 @@ module CmsMod
     end
 
     #
-    # Called to show a single content item, which could be text or file
+    # Called to show a single content item, which could be text or file. It will get all of the
+    # versions of the item.
     #
     get '/show/:ctype/:page/:block/:ver' do
       #puts "Showing #{request.scheme}://#{request.host}:#{request.port}/api/v1/cms#{params[:ctype]}/#{CGI::escape(params[:page])}/#{params[:block]}/#{params[:ver]}"
-      result = HTTParty.get("#{request.scheme}://#{request.host}:#{request.port}/api/v1/cms/#{params[:ctype]}/#{CGI::escape(params[:page])}/#{params[:block]}/#{params[:ver]}").parsed_response['result']
-      @item = JSON.parse(result)[0] rescue @item = Hash.new
-      puts "Showing: #{@item.class} => #{@item.inspect}"
+      result = HTTParty.get("#{request.scheme}://#{request.host}:#{request.port}/api/v1/cms/#{params[:ctype]}/#{CGI::escape(params[:page])}/#{params[:block]}/any").parsed_response['result']
+      @items = JSON.parse(result) rescue @items = Array.new
+      @item = nil
+      @items.each do |i|
+        @item = i if (i['version'] == params[:ver]) # Grab the one that was specifically requested
+      end
+      @items.delete(@item) if !(@item.nil?)
       erb :show
     end
 
@@ -63,7 +68,7 @@ module CmsMod
       action = params[:action].downcase
       action = "make_live" if action == "make live" # Because of stupid form button
       puts "Update! For: #{action_item}, action=#{action}"
-      if (action == "save")
+      if (action == ApiLib::ACTION_SAVE)
         response = HTTParty.post("#{request.scheme}://#{request.host}:#{request.port}/api/v1/cms/#{action_item}",
             :body => {
                 :title => params[:title],
@@ -71,16 +76,23 @@ module CmsMod
                 :action => action
             })
         status = response.parsed_response['result']
+        item = response.parsed_response['item']
+        puts "Updated, status=#{status.inspect}, item=#{item.inspect}"
+
         #result = HTTParty.get("#{request.scheme}://#{request.host}:#{request.port}/api/v1/cms/#{params[:ctype]}/#{CGI::escape(params[:page])}/#{params[:block]}/#{params[:ver]}").parsed_response['result']
         #item = JSON.parse(result)[0] rescue @item = Hash.new
-        redirect to("/show/text/#{CGI::escape(params[:page])}/#{params[:block]}/#{params[:ver]}?status=#{CGI::escape(status)}")
+        redirect to("/show/text/#{item}?status=#{CGI::escape(status)}")
       else
         response = HTTParty.post("#{request.scheme}://#{request.host}:#{request.port}/api/v1/cms/#{action_item}",
             :body => {
                 :action => action
             })
-        @status = response.parsed_response #['result']
-        redirect to('/live')
+        status = response.parsed_response['result']
+        if (action == ApiLib::ACTION_MAKE_LIVE)
+          redirect to("/show/text/#{CGI::escape(params[:page])}/#{params[:block]}/#{CmsContent::LIVE_STATE}?status=#{CGI::escape(status)}")
+        else
+          redirect to("/live?status=#{CGI::escape(status)}")
+        end
       end
     end
   end

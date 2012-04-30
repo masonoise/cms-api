@@ -4,9 +4,7 @@
 module CmsApi
   # API Version 1
   class API_v1 < Grape::API
-    ACTION_DELETE = 'delete'
-    ACTION_MAKE_LIVE = 'make_live'
-    ACTION_SAVE = 'save'
+    include ApiLib
 
     # Set to true for debugging output
     DEBUG = true
@@ -18,7 +16,7 @@ module CmsApi
     version 'v1', :using => :path, :vendor => 'cms_api', :format => :json
 
     resource :cms do
-      desc "Gets a set of text content."
+      desc "Gets a piece of text content in a version, or all versions if passed 'any'."
       get '/text/:page/:block/:v' do
         version = params[:v] || CmsContent::LIVE_STATE
         puts "Fetching: page=#{CGI::unescape(params[:page])}, block = #{params[:block]}, version = #{version}" if DEBUG
@@ -45,28 +43,20 @@ module CmsApi
         puts "Updating content #{params[:page]}/#{params[:block]}/#{params[:v]} with action=#{params[:action]}" if DEBUG
         # TODO: Make work for both text and file content items
         version = params[:v] || CmsContent::LIVE_STATE
-        if (params[:action] == ACTION_DELETE)
+        if (params[:action] == ApiLib::ACTION_DELETE)
           puts "--> Deleting" if DEBUG
           item = CmsContent.first(:page => "#{params[:page]}", :block => params[:block], :version => version)
           item.destroy
-          { :result => "Deleted." }
-        elsif (params[:action] == ACTION_MAKE_LIVE)
+          { :result => "Deleted.", :item => "#{CGI::escape(params[:page])}/#{params[:block]}/#{version}" }
+        elsif (params[:action] == ApiLib::ACTION_MAKE_LIVE)
           puts "--> Making live" if DEBUG
-          item = CmsContent.first(:page => "#{params[:page]}", :block => params[:block], :version => version)
-          item.version = CmsContent::LIVE_STATE
-          item.last_update = Time.new.to_i
-          item.save
-          { :result => "Promoted to live." }
-        elsif (params[:action] == ACTION_SAVE)
+          { :result => ApiLib.make_live(params[:page], params[:block], version), :item => "#{CGI::escape(params[:page])}/#{params[:block]}/#{version}" }
+        elsif (params[:action] == ApiLib::ACTION_SAVE)
           puts "--> Saving changes" if DEBUG
-          item = CmsContent.first(:page => "#{params[:page]}", :block => params[:block], :version => version)
-          author = params[:author] || "Unknown"
-          item.title = params[:title]
-          item.content = params[:content]
-          item.last_update = Time.new.to_i
-          item.last_updated_by = author
-          item.save
-          { :result => "Changes saved." }
+          message = ApiLib.update_item(params[:page], params[:block], version, params)
+          puts "--> Response: #{message}"
+          # Return item with draft state, because saved changes will always apply to a draft version of the item
+          { :result => message, :item => "#{CGI::escape(params[:page])}/#{params[:block]}/#{CmsContent::DRAFT_STATE}" }
         else
           puts "Update called for unknown action: #{params[:action]}"
         end
@@ -74,7 +64,11 @@ module CmsApi
 
       desc "Adds content into Draft state."
       post '/new' do
-        # TODO: check if item with /page/block already exists!
+        # Check if the item already exists in draft state
+        item = CmsContent.first(:page => params[:page], :block => params[:block], :version => CmsContent::DRAFT_STATE)
+        if (!item.nil?)
+          return { :status => 'Item already exists!' }
+        end
         # Required: content, title, page, block, ctype
         error!("missing :content", 400) unless (params[:content] && params[:content].length > 0)
         error!("missing :title", 400) unless (params[:title] && params[:title].length > 0)

@@ -8,7 +8,7 @@ class CmsContent
   key :type, String
   key :version, String
   key :last_updated_by, String
-  key :last_update, Integer
+  key :last_updated, Integer
   key :created_at, Integer
 
   LIVE_STATE = "live"

@@ -1,6 +1,7 @@
 <div class="row" xmlns="http://www.w3.org/1999/html">
   <div class="span12">
     <a href="/live"><i class="icon-list-alt"/></i> Back to List</a>
+
     <h1>CMS: Content View</h1>
 
     <div style="color:red;" id="status">
@@ -11,28 +12,79 @@
 </div>
 
 <div class="row">
-<div class="span6">
-  <div class="row">
-    <form action="/update/<%= @item['type'] %>/<%= CGI::escape(@item['page']) %>/<%= @item['block'] %>/<%= @item['version'] %>" method="post">
-      <input type="hidden" name="page" value="<%= @item['page'] %>"/>
-      <input type="hidden" name="block" value="<%= @item['block'] %>"/>
-      <input type="hidden" name="ver" value="<%= @item['version'] %>"/>
-    <table class='table span6'>
-      <tr><th>Title</th><td><input type="text" name="title" class="span3" value="<%= @item['title'] %>"/></td></tr>
-      <tr><th>Content</th><td><input type="text" name="content" class="span3" value="<%= @item['content'] %>"/></td></tr>
-      <tr><th>Page</th><td><%= @item['page'] %></td></tr>
-      <tr><th>Block</th><td><%= @item['block'] %></td></tr>
-      <tr><th>Type</th><td><%= @item['type'] %></td></tr>
-      <tr><th>Version</th><td><%= @item['version'] %></td></tr>
-      <tr><td colspan="2">
-        <input type="submit" value="Save" name="action" class='btn btn-primary'/>
-        <% if @item['version'] == CmsContent::DRAFT_STATE %>
-            <input type="submit" value="Make Live" name="action" class='btn btn-success'/>
-        <% end %>
-        <input type="submit" value="Delete" name="action" class='btn btn-danger'/>
-      </td></tr>
-    </table>
-    </form>
-  </div>
-</div>
-</div>
+  <div class="span6">
+    <div class="row">
+      <form action="/update/<%= @item['type'] %>/<%= CGI::escape(@item['page']) %>/<%= @item['block'] %>/<%= @item['version'] %>" method="post">
+        <input type="hidden" name="page" value="<%= @item['page'] %>"/>
+        <input type="hidden" name="block" value="<%= @item['block'] %>"/>
+        <input type="hidden" name="ver" value="<%= @item['version'] %>"/>
+
+        <h3>Item is in <%= @item['version'] %> state.</h3>
+        <table class='table span6'>
+          <tr>
+            <th>Title</th>
+            <td><input type="text" name="title" class="span3" value="<%= @item['title'] %>"/></td>
+          </tr>
+          <tr>
+            <th>Content</th>
+            <td><input type="text" name="content" class="span3" value="<%= @item['content'] %>"/></td>
+          </tr>
+          <tr>
+            <th>Page</th>
+            <td><%= @item['page'] %></td>
+          </tr>
+          <tr>
+            <th>Block</th>
+            <td><%= @item['block'] %></td>
+          </tr>
+          <tr>
+            <th>Type</th>
+            <td><%= @item['type'] %></td>
+          </tr>
+          <tr>
+            <th>Version</th>
+            <td><%= @item['version'] %></td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <input type="submit" value="Save" name="action" class='btn btn-primary'/>
+              <% if @item['version'] == CmsContent::DRAFT_STATE %>
+                  <input type="submit" value="Make Live" name="action" class='btn btn-success'/>
+              <% end %>
+              <input type="submit" value="Delete" name="action" class='btn btn-danger'/>
+            </td>
+          </tr>
+        </table>
+      </form>
+    </div>
+
+    <% if (@items.length > 0) %>
+        <div class="row">
+          <h3>Other versions of this item:</h3>
+          <table class='table span6'>
+            <tr>
+              <th>Edit</th>
+              <th>Title</th>
+              <th>Content</th>
+              <th>Version</th>
+              <th>Last Updated</th>
+              <th>&nbsp;</th>
+            </tr>
+            <% @items.each do |i| %>
+                <tr>
+                  <td><a class="btn btn-mini btn-inverse" href="/show/text/<%= CGI::escape(i['page']) %>/<%= i['block'] %>/<%= i['version'] %>"><i class="icon-pencil icon-white"/></i>
+                    </a></td>
+                  <td><%= i['title'] %></td>
+                  <td><%= i['content'] %></td>
+                  <td><%= i['version'] %></td>
+                  <td><%= i['last_updated'] %></td>
+                  <td>
+                    <button class="btn btn-danger">Delete</button>
+                  </td>
+                </tr>
+            <% end %>
+          </table>
+        </div> <!-- end row -->
+    <% end %>
+  </div> <!-- end span6 -->
+</div> <!-- end row -->

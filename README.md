@@ -31,6 +31,20 @@ To use, you will need to:
 - bundle exec rackup - will start the app
 - bundle exec rspec spec - will run the tests, once there are some
 
+CONTENT STATES
+
+Content can have copies in Draft, Live, and Retired states (aka "versions"), with the following transitions:
+
+X- Newly-created items are automatically placed in Draft
+X- Draft items can be made live (aka "published"), which removes the draft copy
+X- Draft items can be edited and remain in Draft
+X- Live items, when edited, create a new copy in Draft state; existing copy remains Live
+- When a Draft item is made live, if there is an existing Live copy it will be made Retired
+- When a Live item is Retired, any existing Retired copy is replaced (i.e. there is only one Retired copy of an item)
+X- When deleting, only a single copy is deleted (not all versions)
+- Live items can be "Rolled back", which swaps the live copy with the Retired copy (if there is one)
+
+
 VERY LONG TO DO LIST:
 
 - Allow editing and saving of content changes in draft mode
