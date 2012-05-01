@@ -91,7 +91,7 @@ module CmsMod
                 :action => action
             })
         status = response.parsed_response['result']
-        if (action == ApiLib::ACTION_MAKE_LIVE)
+        if ((action == ApiLib::ACTION_MAKE_LIVE) || (action == ApiLib::ACTION_REVERT))
           redirect to("/show/text/#{CGI::escape(params[:page])}/#{params[:block]}/#{CmsContent::LIVE_STATE}?status=#{CGI::escape(status)}")
         else
           redirect to("/live?status=#{CGI::escape(status)}")

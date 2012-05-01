@@ -2,6 +2,7 @@ module ApiLib
   ACTION_DELETE = 'delete'
   ACTION_MAKE_LIVE = 'make_live'
   ACTION_SAVE = 'save'
+  ACTION_REVERT = 'revert'
 
   def self.make_live(page, block, version, author = "Unknown")
     if (version != CmsContent::DRAFT_STATE)
@@ -27,6 +28,31 @@ module ApiLib
       item.last_updated = Time.new.to_i
       item.last_updated_by = author
       item.save
+      return message
+    end
+  end
+
+  def self.revert(page, block, version, author = "Unknown")
+    if (version != CmsContent::RETIRED_STATE)
+      return "Error: Cannot revert an item unless it is retired!"
+    else
+      puts "--> Revert"
+      item = CmsContent.first(:page => page, :block => block, :version => version)
+      return "Error: Could not find item!" if item.nil?
+      item.version = CmsContent::LIVE_STATE
+      live_item = CmsContent.first(:page => page, :block => block, :version => CmsContent::LIVE_STATE)
+      item.last_updated = Time.new.to_i
+      item.last_updated_by = author
+      item.save
+      message = "Retired item reverted to live."
+      # If there is a live version, flip it to retired
+      if (!live_item.nil?)
+        live_item.version = CmsContent::RETIRED_STATE
+        live_item.last_updated = Time.new.to_i
+        live_item.last_updated_by = author
+        live_item.save
+        message = "Retired item reverted to live, and live item set to retired."
+      end
       return message
     end
   end

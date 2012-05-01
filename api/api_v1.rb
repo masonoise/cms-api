@@ -51,6 +51,9 @@ module CmsApi
         elsif (params[:action] == ApiLib::ACTION_MAKE_LIVE)
           puts "--> Making live" if DEBUG
           { :result => ApiLib.make_live(params[:page], params[:block], version), :item => "#{CGI::escape(params[:page])}/#{params[:block]}/#{version}" }
+        elsif (params[:action] == ApiLib::ACTION_REVERT)
+          puts "--> Reverting" if DEBUG
+          { :result => ApiLib.revert(params[:page], params[:block], version), :item => "#{CGI::escape(params[:page])}/#{params[:block]}/#{CmsContent::LIVE_STATE}" }
         elsif (params[:action] == ApiLib::ACTION_SAVE)
           puts "--> Saving changes" if DEBUG
           message = ApiLib.update_item(params[:page], params[:block], version, params)

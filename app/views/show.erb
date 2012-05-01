@@ -97,7 +97,10 @@
                   </td>
                   <td>
                     <% if (i['version'] == CmsContent::RETIRED_STATE) %>
-                    <button class="btn btn-primary btn-small"><i class="icon-backward icon-white"></i> Revert</button>
+                        <form action="/update/<%= i['type'] %>/<%= CGI::escape(i['page']) %>/<%= i['block'] %>/<%= i['version'] %>" method="post">
+                          <input type="hidden" name="action" value="revert">
+                          <button type="submit" class="btn-small btn-primary"><i class="icon-backward icon-white"></i> Revert</button>
+                        </form>
                     <% else %>&nbsp;
                     <% end %>
                   </td>
