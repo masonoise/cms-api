@@ -51,6 +51,7 @@ TO DO LIST:
 - Authentication and saving of Author's name with changes
 - Paginate the index page list of content
 - Add search to index page content list to be able to find content for a page or search within content text
+- File support is still in the works: need to finish file upload, add S3 push, and add file fetching
 - When fetching a file, need to be able to ask for either the URL or the file itself
 
 - When a new item is posted to the get API, it should save it as a new draft, with default text as passed in (this is a nice to have feature)
