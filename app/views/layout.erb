@@ -16,6 +16,16 @@
 
 <div class="container">
 
+  <% if flash.has?(:notice) %>
+      <div class="row">
+        <div class="span4" style="height: auto; background-color: #C0FFB0">
+          <h4 style="color:red; margin: 5px;"><i class="icon-info-sign"></i> <%= flash[:notice] %></h4>
+        </div>
+        <br/>
+        <br/>
+      </div>
+  <% end %>
+
   <%= yield %>
 
 </div>

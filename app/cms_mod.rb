@@ -1,9 +1,12 @@
 require 'sinatra'
 require 'cgi'
 require 'sinatra/content_for2'
+require 'rack-flash'
 
 module CmsMod
   class CmsApp < Sinatra::Base
+    enable :sessions
+    use Rack::Flash
     helpers Sinatra::ContentFor2
 
     get '/*favicon.ico' do
@@ -32,6 +35,7 @@ module CmsMod
                 :ctype => params[:ctype]
             })
         @status = response.parsed_response #['result']
+        flash[:notice] = "#{@status['status']}"
         redirect to("/show/text/#{CGI::escape(params[:page])}/#{block_num}/draft")
       elsif (params[:ctype] == "file")
         # First get the file, then send it to S3, then invoke the API to store the reference info

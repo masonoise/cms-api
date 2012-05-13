@@ -7,8 +7,9 @@ gem "mongo_mapper", "0.11.1"
 gem "bson_ext", "1.6.2"
 gem "sinatra", "1.3.1"
 gem "httparty", "0.8.3"
-gem "aws-sdk"
-gem "sinatra-content-for2"
+gem "aws-sdk", "1.4.1"
+gem "sinatra-content-for2", "0.3"
+gem "rack-flash", "0.1.2"
 
 group :development do
   gem "guard"

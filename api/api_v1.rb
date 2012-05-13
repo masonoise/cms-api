@@ -70,25 +70,27 @@ module CmsApi
         # Check if the item already exists in draft state
         item = CmsContent.first(:page => params[:page], :block => params[:block], :version => CmsContent::DRAFT_STATE)
         if (!item.nil?)
-          return { :status => 'Item already exists!' }
+          puts "Tried to create new content for existing page=#{params[:page]}, block=#{params[:block]}, draft"
+          { :status => 'Item already exists!' }
+        else
+          # Required: content, title, page, block, ctype
+          error!("missing :content", 400) unless (params[:content] && params[:content].length > 0)
+          error!("missing :title", 400) unless (params[:title] && params[:title].length > 0)
+          error!("missing :page", 400) unless (params[:page] && params[:content].length > 0)
+          error!("missing :block", 400) unless (params[:block] && params[:content].length > 0)
+          error!("missing :ctype", 400) unless (params[:ctype] && params[:ctype].length > 0)
+          author = params[:author] || "Unknown"
+          item = CmsContent.create(:title => params[:title],
+                                   :content => params[:content],
+                                   :page => params[:page],
+                                   :block => params[:block],
+                                   :type => params[:ctype],
+                                   :version => CmsContent::DRAFT_STATE,
+                                   :created_at => Time.new.to_i,
+                                   :last_updated => Time.new.to_i,
+                                   :last_updated_by => author)
+          { :status => "Saved as draft." }
         end
-        # Required: content, title, page, block, ctype
-        error!("missing :content", 400) unless (params[:content] && params[:content].length > 0)
-        error!("missing :title", 400) unless (params[:title] && params[:title].length > 0)
-        error!("missing :page", 400) unless (params[:page] && params[:content].length > 0)
-        error!("missing :block", 400) unless (params[:block] && params[:content].length > 0)
-        error!("missing :ctype", 400) unless (params[:ctype] && params[:ctype].length > 0)
-        author = params[:author] || "Unknown"
-        item = CmsContent.create(:title => params[:title],
-            :content => params[:content],
-            :page => params[:page],
-            :block => params[:block],
-            :type => params[:ctype],
-            :version => CmsContent::DRAFT_STATE,
-            :created_at => Time.new.to_i,
-            :last_updated => Time.new.to_i,
-            :last_updated_by => author)
-        { :status => "Saved as draft." }
       end
 
     end
