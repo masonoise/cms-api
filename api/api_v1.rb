@@ -9,6 +9,8 @@ module CmsApi
     # Set to true for debugging output
     DEBUG = true
 
+    PAGE_SIZE = 5
+
     MongoMapper.connection = Mongo::Connection.new('127.0.0.1', 27017, :pool_size => 5, :pool_timeout => 5)
     MongoMapper.database = 'cms'
     #MongoMapper.database.authenticate('{user-name}','{user-password}')
@@ -16,26 +18,33 @@ module CmsApi
     version 'v1', :using => :path, :vendor => 'cms_api', :format => :json
 
     resource :cms do
+      desc "Returns a page of text content of a given version."
+      get '/text/list/:v/:p' do
+        puts "Fetching list of text of version #{params[:v]}, page #{params[:p]}" if DEBUG
+        version = params[:v] || CmsContent::LIVE_STATE
+        entry_count = CmsContent.where(:version => version).count
+        { :result => { :list => CmsContent.where(:version => version).paginate(
+            :order => :last_updated,
+            :per_page => PAGE_SIZE,
+            :page => params[:p]),
+        #) .limit(PAGE_SIZE).skip(params[:p] * PAGE_SIZE),
+              :total => entry_count }
+        }
+      end
+
       desc "Gets a piece of text content in a version, or all versions if passed 'any'."
       get '/text/:page/:block/:v' do
         version = params[:v] || CmsContent::LIVE_STATE
         puts "Fetching: page=#{CGI::unescape(params[:page])}, block = #{params[:block]}, version = #{version}" if DEBUG
         conditions = { :page => "#{CGI::unescape(params[:page])}", :block => params[:block] }
         conditions[:version] = version unless version == CmsContent::ANY_STATE
-        items = CmsContent.all(conditions)
+        items = CmsContent.where(conditions)
         if (items == "null")
           result = []
         else
           result = {:result => items.to_json}
         end
         result
-      end
-
-      desc "Returns all text content of a given version."
-      get '/text/all/:v' do
-        puts "Fetching all text of version #{params[:v]}" if DEBUG
-        version = params[:v] || CmsContent::LIVE_STATE
-        { :result => CmsContent.all(:version => version) }
       end
 
       desc "Updates content item."

@@ -14,7 +14,7 @@
 
 <div class="row">
   <div class="span12">
-    <table class="span3">
+    <table class="span5">
       <tr>
         <td><a id="live_btn" class="btn btn-primary
         <% if (@version == 'live') %>disabled
@@ -22,7 +22,11 @@
         <td><a id="draft_btn" class="btn btn-primary
         <% if (@version == 'draft') %>disabled
         <% end %>" href="/draft">Draft</a></td>
-        <td><h5>Viewing <%= @version %> items</h5></td>
+        <td><h5>Showing <%= @display_from %>-<%= ((@display_from+4) > @total_count) ? @total_count : (@display_from+4) %> of <%= @total_count %> items in <%= @version %> state
+          <% if (@display_from.to_i > 1) %><a href="/<%= @version %>?page=<%= @page-1 %>" class="icon-arrow-left"></a><% end %>
+          <% if (@display_from.to_i+4 < @total_count.to_i) %><a href="/<%= @version %>?page=<%= @page+1 %>" class="icon-arrow-right"></a><% end %>
+        </h5>
+        </td>
       </tr>
     </table>
     <br/>

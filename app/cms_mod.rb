@@ -19,7 +19,12 @@ module CmsMod
 
     get '/:ver' do
       @version = params[:ver] || CmsContent::LIVE_STATE
-      @content_list = HTTParty.get("#{request.scheme}://#{request.host}:#{request.port}/api/v1/cms/text/all/#{@version}").parsed_response['result']
+      @page = params[:page].to_i || 1
+      rc = HTTParty.get("#{request.scheme}://#{request.host}:#{request.port}/api/v1/cms/text/list/#{@version}/#{@page}").parsed_response['result']
+      @content_list = rc["list"]
+      @total_count = rc["total"]
+      @display_from = (5 * (@page - 1))+1
+      #puts "rc = #{rc.inspect}"
       erb :index
     end
 
